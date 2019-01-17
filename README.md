@@ -1,4 +1,7 @@
 # generator mysql反射生成（两种实现）
+## 项目目录结构
+    ![image](https://raw.githubusercontent.com/2425358736/mybatis-generator-demo/master/image/V2UP06S9X_93%5D%7DU0%5BQCL%6044.png)
+
 ## mybatis-generator文件
 ```
 <?xml version="1.0" encoding="UTF-8"?>
@@ -619,6 +622,326 @@ public class GenerateStartUp {
 ```
 #### generator-extend是BasePlugin生成的maven包 （地址：https://gitee.com/lzq199528/generator-extend）
 
-![image](https://raw.githubusercontent.com/2425358736/mybatis-generator-demo/master/image/P%5B1OV_LAW%252TZD1JN5%40_N(F.png)
+![image](https://raw.githubusercontent.com/2425358736/mybatis-generator-demo/master/image/P%5B1OV_LAW%252TZD1JN5%40_N\(F.png)
 
-    
+##### 双击运行mybatis-generator:generate 或者 运行GenerateStartUp后将生成实体类，接口，及xml 格式如下
+![image](https://raw.githubusercontent.com/2425358736/mybatis-generator-demo/master/image/6L%24V345M%7B2QR%5DS8%24U5FZB%7BC.png)
+
+
+#### SysRole
+
+```
+package com.liuzhiqiang.domain.sysRole;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import java.util.Date;
+import lombok.Data;
+
+/**
+* 开发公司：青岛海豚数据技术有限公司
+* 版权：青岛海豚数据技术有限公司
+* <p>
+* SysRole
+*
+* @author 系统
+* @created Create Time: Thu Jan 17 17:01:12 CST 2019
+*/
+@ApiModel(value="com.liuzhiqiang.domain.sysRole.SysRole",description="")
+@Data()
+public class SysRole {
+    /**
+     * 
+     */
+    @ApiModelProperty(value="",name="id")
+    private Long id;
+
+    /**
+     * 部门id
+     */
+    @ApiModelProperty(value="部门id",name="departmentId")
+    private Long departmentId;
+
+    /**
+     * 角色编号
+     */
+    @ApiModelProperty(value="角色编号",name="roleNumber")
+    private String roleNumber;
+
+    /**
+     * 角色名称
+     */
+    @ApiModelProperty(value="角色名称",name="roleName")
+    private String roleName;
+
+    /**
+     * 角色类型
+     */
+    @ApiModelProperty(value="角色类型",name="roleType")
+    private String roleType;
+
+    /**
+     * 备注
+     */
+    @ApiModelProperty(value="备注",name="remarks")
+    private String remarks;
+
+    /**
+     * 创建人
+     */
+    @ApiModelProperty(value="创建人",name="createBy")
+    private Long createBy;
+
+    /**
+     * 创建时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
+    @ApiModelProperty(value="创建时间",name="createDate")
+    private Date createDate;
+
+    /**
+     * 更新者
+     */
+    @ApiModelProperty(value="更新者",name="updateBy")
+    private Long updateBy;
+
+    /**
+     * 更新时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
+    @ApiModelProperty(value="更新时间",name="updateDate")
+    private Date updateDate;
+
+    /**
+     * 删除标记 0.正常 1.删除
+     */
+    @ApiModelProperty(value="删除标记 0.正常 1.删除",name="delFlag")
+    private Integer delFlag;
+}
+```
+
+#### SysRoleMapper
+
+```
+package com.liuzhiqiang.mapper.sysRole;
+
+import com.liuzhiqiang.domain.sysRole.SysRole;
+import org.apache.ibatis.annotations.Mapper;
+
+/**
+* 开发公司：青岛海豚数据技术有限公司
+* 版权：青岛海豚数据技术有限公司
+* <p>
+* SysRoleMapper
+*
+* @author 系统
+* @created Create Time: Thu Jan 17 17:01:12 CST 2019
+*/
+@Mapper()
+public interface SysRoleMapper {
+    /**
+     * 根据主键删除数据
+     * @param id
+     */
+    int deleteByPrimaryKey(Long id);
+
+    /**
+     * 插入数据库记录（不建议使用）
+     * @param record
+     */
+    int insert(SysRole record);
+
+    /**
+     * 插入数据库记录（建议使用）
+     * @param record
+     */
+    int insertSelective(SysRole record);
+
+    /**
+     * 根据主键id查询
+     * @param id
+     */
+    SysRole selectByPrimaryKey(Long id);
+
+    /**
+     * 修改数据(推荐使用)
+     * @param record
+     */
+    int updateByPrimaryKeySelective(SysRole record);
+
+    /**
+     * 修改数据
+     * @param record
+     */
+    int updateByPrimaryKey(SysRole record);
+}
+```
+#### SysRoleMapper.xml
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuzhiqiang.mapper.sysRole.SysRoleMapper">
+  <resultMap id="BaseResultMap" type="com.liuzhiqiang.domain.sysRole.SysRole">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="department_id" jdbcType="BIGINT" property="departmentId" />
+    <result column="role_number" jdbcType="VARCHAR" property="roleNumber" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="role_type" jdbcType="VARCHAR" property="roleType" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="del_flag" jdbcType="TINYINT" property="delFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, department_id, role_number, role_name, role_type, remarks, create_by, create_date, 
+    update_by, update_date, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_role
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.liuzhiqiang.domain.sysRole.SysRole">
+    insert into sys_role (id, department_id, role_number, 
+      role_name, role_type, remarks, 
+      create_by, create_date, update_by, 
+      update_date, del_flag)
+    values (#{id,jdbcType=BIGINT}, #{departmentId,jdbcType=BIGINT}, #{roleNumber,jdbcType=VARCHAR}, 
+      #{roleName,jdbcType=VARCHAR}, #{roleType,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.liuzhiqiang.domain.sysRole.SysRole">
+    insert into sys_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="departmentId != null">
+        department_id,
+      </if>
+      <if test="roleNumber != null">
+        role_number,
+      </if>
+      <if test="roleName != null">
+        role_name,
+      </if>
+      <if test="roleType != null">
+        role_type,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="departmentId != null">
+        #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="roleNumber != null">
+        #{roleNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null">
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleType != null">
+        #{roleType,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=BIGINT},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.liuzhiqiang.domain.sysRole.SysRole">
+    update sys_role
+    <set>
+      <if test="departmentId != null">
+        department_id = #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="roleNumber != null">
+        role_number = #{roleNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleType != null">
+        role_type = #{roleType,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=BIGINT},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.liuzhiqiang.domain.sysRole.SysRole">
+    update sys_role
+    set department_id = #{departmentId,jdbcType=BIGINT},
+      role_number = #{roleNumber,jdbcType=VARCHAR},
+      role_name = #{roleName,jdbcType=VARCHAR},
+      role_type = #{roleType,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=BIGINT},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
+```
