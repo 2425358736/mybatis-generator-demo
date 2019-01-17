@@ -1,6 +1,7 @@
 # generator mysql反射生成（两种实现）
 ## 项目目录结构
-    ![image](https://raw.githubusercontent.com/2425358736/mybatis-generator-demo/master/image/V2UP06S9X_93%5D%7DU0%5BQCL%6044.png)
+
+![image](https://raw.githubusercontent.com/2425358736/mybatis-generator-demo/master/image/V2UP06S9X_93%5D%7DU0%5BQCL%6044.png)
 
 ## mybatis-generator文件
 ```
@@ -945,3 +946,6 @@ public interface SysRoleMapper {
   </update>
 </mapper>
 ```
+
+
+    
