@@ -947,5 +947,7 @@ public interface SysRoleMapper {
 </mapper>
 ```
 
+#### 传送门： https://github.com/2425358736/mybatis-generator-demo
+#### Java学习交流群 111764814
 
     
