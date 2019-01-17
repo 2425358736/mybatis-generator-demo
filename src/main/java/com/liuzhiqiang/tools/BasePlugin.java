@@ -82,7 +82,7 @@ public class BasePlugin extends PluginAdapter {
 
         // 追加日期格式化注解
         if (introspectedColumn.getJdbcTypeName() == "TIMESTAMP") {
-            field.addJavaDocLine(Annotation.JsonFormat.getAnnotation() + "(pattern = \"yyyy-MM-dd\",timezone=\"GMT+8\")");
+            field.addAnnotation(Annotation.JsonFormat.getAnnotation() + "(pattern = \"yyyy-MM-dd\",timezone=\"GMT+8\")");
             topLevelClass.addImportedType(new FullyQualifiedJavaType(Annotation.JsonFormat.getClazz()));
         }
         // tinyint数据（Byte）转换成（Integer）类型
@@ -112,7 +112,7 @@ public class BasePlugin extends PluginAdapter {
     }
 
     /**
-     * set方法 false 不生成
+     * get方法 false 不生成
      * @param method
      * @param topLevelClass
      * @param introspectedColumn

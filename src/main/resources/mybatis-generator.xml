@@ -5,6 +5,7 @@
 <generatorConfiguration>
 
     <context id="DB2Tables"    targetRuntime="MyBatis3">
+        <!-- <plugin>元素用来定义一个插件。插件用于扩展或修改通过MyBatis Generator (MBG)代码生成器生成的代码。 -->
         <plugin type="com.liuzhiqiang.tools.BasePlugin" />
 
         <commentGenerator>
