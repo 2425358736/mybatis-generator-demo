@@ -65,7 +65,7 @@
 </generatorConfiguration>
 ```
 
-##### <plugin>元素用来定义一个插件。插件用于扩展或修改通过MyBatis Generator (MBG)代码生成器生成的代码
+#####  plugin元素用来定义一个插件。插件用于扩展或修改通过MyBatis Generator (MBG)代码生成器生成的代码
 ##### mybatis-generator-core 提供了常用的插件 PluginAdapter 要定制 生成的实体类 接口 及sql 我们只要继承PluginAdapter 并重写相对应的内部方法就好了
 ##### 简单介绍本文中用到的几个方法 及 参数说明
 
