@@ -621,7 +621,7 @@ public class GenerateStartUp {
 </project>
 
 ```
-#### generator-extend是BasePlugin生成的maven包 编译后地址：https://gitee.com/lzq199528/generator-extend
+#### generator-extend是BasePlugin生成的maven包 编译后地址：https://gitee.com/lzq199528/generator-extend 源码地址： https://github.com/2425358736/generator-extend
 
 ![image](https://raw.githubusercontent.com/2425358736/mybatis-generator-demo/master/image/P%5B1OV_LAW%252TZD1JN5%40_N\(F.png)
 
