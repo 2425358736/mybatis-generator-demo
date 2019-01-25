@@ -6,8 +6,12 @@
 
     <context id="DB2Tables"    targetRuntime="MyBatis3">
         <!-- <plugin>元素用来定义一个插件。插件用于扩展或修改通过MyBatis Generator (MBG)代码生成器生成的代码。 -->
-        <plugin type="com.liuzhiqiang.tools.BasePlugin" />
-
+        <plugin type="com.liuzhiqiang.tools.BasePlugin" >
+            <property name="controller" value="com.liuzhiqiang.controller.sysRole" />
+            <property name="service" value="com.liuzhiqiang.service.sysRole" />
+            <property name="vo" value="com.liuzhiqiang.domain.vo.sysRole" />
+            <property name="impl" value="com.liuzhiqiang.service.sysRole.impl" />
+        </plugin>
         <commentGenerator>
             <property name="javaFileEncoding" value="UTF-8"/>
             <!-- 是否去除自动生成的注释 true：是 ： false:否 -->

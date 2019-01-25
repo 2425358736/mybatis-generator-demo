@@ -1,14 +1,14 @@
 package com.liuzhiqiang.tools;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.apache.commons.lang.StringUtils;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.java.*;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 /**
  * 开发公司：青岛海豚数据技术有限公司
@@ -41,6 +41,21 @@ public class BasePlugin extends PluginAdapter {
 
         topLevelClass.addAnnotation(Annotation.ApiModel.getAnnotation() + "(value=\"" + topLevelClass.getType() + "\",description=\"" + introspectedTable.getRemarks() + "\")");
         topLevelClass.addAnnotation(Annotation.DATA.getAnnotation() + "()");
+
+        try {
+            // 生成controller文件
+            generateControllerFile(topLevelClass, introspectedTable);
+            // 生成vo文件
+            generateVoFile(topLevelClass, introspectedTable);
+            // 生成service文件
+            generateServiceFile(topLevelClass, introspectedTable);
+            // 生成Impl文件
+            generateImplFile(topLevelClass, introspectedTable);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TemplateException e) {
+            e.printStackTrace();
+        }
         return super.modelBaseRecordClassGenerated(topLevelClass, introspectedTable);
     }
 
@@ -80,13 +95,18 @@ public class BasePlugin extends PluginAdapter {
         topLevelClass.addImportedType(new FullyQualifiedJavaType(Annotation.ApiModelProperty.getClazz()));
         field.addAnnotation(Annotation.ApiModelProperty.getAnnotation() + "(value=\""+ introspectedColumn.getRemarks() + "\",name=\"" +introspectedColumn.getJavaProperty()+"\")");
 
+        // 追加长度验证注解
+        String a = field.getType().getShortName();
+        if (StringUtils.equals("String", a)) {
+            topLevelClass.addImportedType(new FullyQualifiedJavaType(Annotation.Length.getClazz()));
+            field.addAnnotation(Annotation.Length.getAnnotation() + "(max = " + introspectedColumn.getLength() + ", message = \"" + introspectedColumn.getRemarks() + "名长度最长为" + introspectedColumn.getLength() + "\")");
+        }
         // 追加日期格式化注解
         if (introspectedColumn.getJdbcTypeName() == "TIMESTAMP") {
             field.addAnnotation(Annotation.JsonFormat.getAnnotation() + "(pattern = \"yyyy-MM-dd\",timezone=\"GMT+8\")");
             topLevelClass.addImportedType(new FullyQualifiedJavaType(Annotation.JsonFormat.getClazz()));
         }
         // tinyint数据（Byte）转换成（Integer）类型
-        String a = field.getType().getShortName();
         if (StringUtils.equals("Byte", a)) {
             field.setType(new FullyQualifiedJavaType("java.lang.Integer"));
         }
@@ -256,7 +276,7 @@ public class BasePlugin extends PluginAdapter {
         topLevelClass.addJavaDocLine("/**");
         topLevelClass.addJavaDocLine("* 开发公司：青岛海豚数据技术有限公司");
         topLevelClass.addJavaDocLine("* 版权：青岛海豚数据技术有限公司");
-        topLevelClass.addJavaDocLine("* <p>");
+        topLevelClass.addJavaDocLine("* Class");
         topLevelClass.addJavaDocLine("* " + topLevelClass.getType().getShortName());
         topLevelClass.addJavaDocLine("*");
         topLevelClass.addJavaDocLine("* @author 系统");
@@ -276,12 +296,122 @@ public class BasePlugin extends PluginAdapter {
         interfaze.addJavaDocLine("/**");
         interfaze.addJavaDocLine("* 开发公司：青岛海豚数据技术有限公司");
         interfaze.addJavaDocLine("* 版权：青岛海豚数据技术有限公司");
-        interfaze.addJavaDocLine("* <p>");
+        interfaze.addJavaDocLine("* Interface");
         interfaze.addJavaDocLine("* " + interfaze.getType().getShortName());
         interfaze.addJavaDocLine("*");
         interfaze.addJavaDocLine("* @author 系统");
         interfaze.addJavaDocLine("* @created Create Time: " + new Date());
         interfaze.addJavaDocLine("*/");
         // 生成注释结束
+    }
+
+    // 生成controller
+    public void generateControllerFile(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) throws IOException, TemplateException {
+
+        String packageController =  properties.getProperty("controller");
+        String packageService = properties.getProperty("service");
+
+        String[] mulu  = properties.getProperty("controller").split("\\.");
+        String moduleName = mulu[mulu.length - 1];
+        String fileName = topLevelClass.getType().getShortName();
+
+        String path = introspectedTable.getContext().getJavaModelGeneratorConfiguration().getTargetProject() + "/" + properties.getProperty("controller").replaceAll("\\.","/");
+        File catalog = new File(path);
+        catalog.mkdirs();
+        File mapperFile = new File(path  + '/' + fileName +  "Controller.java");
+        Template template = FreeMarkerTemplateUtils.getTemplate("Controller.ftl");
+        FileOutputStream fos = new FileOutputStream(mapperFile);
+        Writer out = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"),10240);
+
+        Map<String,Object> dataMap = new HashMap<String,Object>();
+
+        dataMap.put("package_controller",packageController);
+        dataMap.put("package_service",packageService);
+        dataMap.put("module_name",moduleName);
+        dataMap.put("file_name",fileName);
+        dataMap.put("date",new Date());
+
+        template.process(dataMap,out);
+    }
+
+    // 生成vo类
+    public void generateVoFile(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) throws IOException, TemplateException {
+        String packageVo = properties.getProperty("vo");
+        String packageDomain = topLevelClass.getType().getPackageName();
+
+        String[] mulu  = properties.getProperty("vo").split("\\.");
+        String moduleName = mulu[mulu.length - 1];
+        String fileName = topLevelClass.getType().getShortName();
+
+        String path = introspectedTable.getContext().getJavaModelGeneratorConfiguration().getTargetProject() + "/" + properties.getProperty("vo").replaceAll("\\.","/");
+        File catalog = new File(path);
+        catalog.mkdirs();
+        File mapperFile = new File(path  + '/' + fileName +  "Vo.java");
+        Template template = FreeMarkerTemplateUtils.getTemplate("Vo.ftl");
+        FileOutputStream fos = new FileOutputStream(mapperFile);
+        Writer out = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"),10240);
+
+        Map<String,Object> dataMap = new HashMap<String,Object>();
+
+        dataMap.put("package_vo",packageVo);
+        dataMap.put("package_domain",packageDomain);
+        dataMap.put("module_name",moduleName);
+        dataMap.put("file_name",fileName);
+        dataMap.put("date",new Date());
+
+        template.process(dataMap,out);
+    }
+
+    // 生成service
+    public void generateServiceFile(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) throws IOException, TemplateException {
+        String packageService = properties.getProperty("service");
+
+        String[] mulu  = properties.getProperty("service").split("\\.");
+        String moduleName = mulu[mulu.length - 1];
+        String fileName = topLevelClass.getType().getShortName();
+
+        String path = introspectedTable.getContext().getJavaModelGeneratorConfiguration().getTargetProject() + "/" + properties.getProperty("service").replaceAll("\\.","/");
+        File catalog = new File(path);
+        catalog.mkdirs();
+        File mapperFile = new File(path  + '/' + fileName +  "Service.java");
+        Template template = FreeMarkerTemplateUtils.getTemplate("Service.ftl");
+        FileOutputStream fos = new FileOutputStream(mapperFile);
+        Writer out = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"),10240);
+
+        Map<String,Object> dataMap = new HashMap<String,Object>();
+
+        dataMap.put("package_service",packageService);
+        dataMap.put("module_name",moduleName);
+        dataMap.put("file_name",fileName);
+        dataMap.put("date",new Date());
+
+        template.process(dataMap,out);
+    }
+
+
+    // 生成实现类
+    public void  generateImplFile(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) throws IOException, TemplateException {
+        String packageImpl = properties.getProperty("impl");
+        String packageService = properties.getProperty("service");
+        String packageMapper = introspectedTable.getContext().getJavaClientGeneratorConfiguration().getTargetPackage();
+
+        String fileName = topLevelClass.getType().getShortName();
+        String path = introspectedTable.getContext().getJavaModelGeneratorConfiguration().getTargetProject() + "/" + properties.getProperty("impl").replaceAll("\\.","/");
+        File catalog = new File(path);
+        catalog.mkdirs();
+        File mapperFile = new File(path  + '/' + fileName +  "Impl.java");
+        Template template = FreeMarkerTemplateUtils.getTemplate("Impl.ftl");
+        FileOutputStream fos = new FileOutputStream(mapperFile);
+        Writer out = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"),10240);
+
+        Map<String,Object> dataMap = new HashMap<String,Object>();
+
+        dataMap.put("package_impl",packageImpl);
+        dataMap.put("package_service",packageService);
+        dataMap.put("package_mapper",packageMapper);
+        dataMap.put("file_name",fileName);
+        dataMap.put("date",new Date());
+
+        template.process(dataMap,out);
     }
 }
