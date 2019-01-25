@@ -9,7 +9,7 @@
         <plugin type="com.liuzhiqiang.tools.BasePlugin">
             <property name="controller" value="com.liuzhiqiang.controller.sysRole"/>
             <property name="service" value="com.liuzhiqiang.service.sysRole"/>
-            <property name="vo" value="com.liuzhiqiang.domain.vo.sysRole"/>
+            <property name="vo" value="com.liuzhiqiang.domain.sysRole.vo"/>
             <property name="impl" value="com.liuzhiqiang.service.sysRole.impl"/>
         </plugin>
         <commentGenerator>
