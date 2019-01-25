@@ -947,6 +947,156 @@ public interface SysRoleMapper {
 </mapper>
 ```
 
+
+## generator freemarker 实现自动生成controller,service, impl接口实现类 及 vo类
+
+### 上个文档介绍了generator扩展自定义生成 注解 注释等。但是日常开发中还是要写controller service 等。手写也挺麻烦的，我是最讨厌这些重复劳动，索性一次生成跟大家分享一下
+
+### 实心思路是基于freemarker 模板，替换表达式来实现，拿controller为例
+
+#### controller.ftl
+```
+package ${package_controller};
+
+import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import ${package_service}.${file_name}Service;
+
+/**
+* 开发公司：青岛海豚数据技术有限公司
+* 版权：青岛海豚数据技术有限公司
+*
+* ${file_name}Controller
+*
+* @author 系统
+* @created Create Time: ${date?string('yyyy-MM-dd hh:mm:ss')}
+*/
+
+
+@RestController
+@RequestMapping("/${module_name}")
+@CrossOrigin
+@Api(description = "相关的api")
+public class ${file_name}Controller {
+
+    @Autowired
+    public ${file_name}Service ${file_name?uncap_first}Service;
+
+}
+```
+### 我只需要在指定目录下创建一个Java文件，在通过generator里的Interface，TopLevelClass，IntrospectedTable的属性去替换掉里面的内容就ok了
+#### IntrospectedTable里除了有表信息还有mybatis-generator.xml里的配置信息
+
+### mybatis-generator.xml 增加property标签
+
+```
+<plugin type="com.liuzhiqiang.tools.BasePlugin">
+        <property name="controller" value="com.liuzhiqiang.controller.sysRole"/>
+        <property name="service" value="com.liuzhiqiang.service.sysRole"/>
+        <property name="vo" value="com.liuzhiqiang.domain.sysRole.vo"/>
+        <property name="impl" value="com.liuzhiqiang.service.sysRole.impl"/>
+</plugin>
+```
+### 这样我们就能在PluginAdapter 通过properties拿到我们定义的property属性
+
+```
+String packageController = properties.getProperty("controller");
+```
+
+### 具体实现
+#### 首先我们先将FreeMarker模板引擎的maven包引入
+
+```
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-freemarker</artifactId>
+    <version>1.5.10.RELEASE</version>
+</dependency>
+```
+
+### 定义模板引擎工具类FreeMarkerTemplateUtils
+
+```
+package com.liuzhiqiang.tools;
+
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.NullCacheStorage;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateExceptionHandler;
+
+import java.io.IOException;
+
+/**
+ * 开发公司：青岛海豚数据技术有限公司
+ * 版权：青岛海豚数据技术有限公司
+ * <p>
+ * FreeMarkerTemplateUtils
+ *
+ * @author 刘志强
+ * @created Create Time: 2019/1/22
+ */
+public class FreeMarkerTemplateUtils {
+    private FreeMarkerTemplateUtils() {
+    }
+
+    private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_22);
+
+    static {
+        CONFIGURATION.setTemplateLoader(new ClassTemplateLoader(FreeMarkerTemplateUtils.class, "/template"));
+        CONFIGURATION.setDefaultEncoding("UTF-8");
+        CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        CONFIGURATION.setCacheStorage(NullCacheStorage.INSTANCE);
+    }
+
+    public static Template getTemplate(String templateName) throws IOException {
+        try {
+            return CONFIGURATION.getTemplate(templateName);
+        } catch (IOException e) {
+            throw e;
+        }
+    }
+}
+```
+#### 生成controller
+
+```
+ public void generateControllerFile(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) throws IOException, TemplateException {
+        // 获取定义的controller包路径
+        String packageController = properties.getProperty("controller");
+        if (packageController != null) {
+            // 获取定义的service包路径
+            String packageService = properties.getProperty("service");
+            String[] mulu = properties.getProperty("controller").split("\\.");
+            // 获取模块名 可以作为本模块的跟路径使用
+            String moduleName = mulu[mulu.length - 1];
+            // 获取文件名
+            String fileName = topLevelClass.getType().getShortName();
+            // 目录转成path目录
+            String path = introspectedTable.getContext().getJavaModelGeneratorConfiguration().getTargetProject() + "/" + properties.getProperty("controller").replaceAll("\\.", "/");
+            File catalog = new File(path);
+            // 目录无则创建
+            catalog.mkdirs();
+            // 新建文件
+            File mapperFile = new File(path + '/' + fileName + "Controller.java");
+            // 获取模板
+            Template template = FreeMarkerTemplateUtils.getTemplate("Controller.ftl");
+            FileOutputStream fos = new FileOutputStream(mapperFile);
+            Writer out = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"), 10240);
+            Map<String, Object> dataMap = new HashMap<String, Object>();
+            dataMap.put("package_controller", packageController);
+            dataMap.put("package_service", packageService);
+            dataMap.put("module_name", moduleName);
+            dataMap.put("file_name", fileName);
+            dataMap.put("date", new Date());
+            // 模板解析
+            template.process(dataMap, out);
+        }
+    }
+```
+
+
 #### 传送门： https://github.com/2425358736/mybatis-generator-demo
 #### Java学习交流群 111764814
 
