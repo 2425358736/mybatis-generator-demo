@@ -4,19 +4,19 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
 
-    <context id="DB2Tables"    targetRuntime="MyBatis3">
+    <context id="DB2Tables" targetRuntime="MyBatis3">
         <!-- <plugin>元素用来定义一个插件。插件用于扩展或修改通过MyBatis Generator (MBG)代码生成器生成的代码。 -->
-        <plugin type="com.liuzhiqiang.tools.BasePlugin" >
-            <property name="controller" value="com.liuzhiqiang.controller.sysRole" />
-            <property name="service" value="com.liuzhiqiang.service.sysRole" />
-            <property name="vo" value="com.liuzhiqiang.domain.vo.sysRole" />
-            <property name="impl" value="com.liuzhiqiang.service.sysRole.impl" />
+        <plugin type="com.liuzhiqiang.tools.BasePlugin">
+            <property name="controller" value="com.liuzhiqiang.controller.sysRole"/>
+            <property name="service" value="com.liuzhiqiang.service.sysRole"/>
+            <property name="vo" value="com.liuzhiqiang.domain.vo.sysRole"/>
+            <property name="impl" value="com.liuzhiqiang.service.sysRole.impl"/>
         </plugin>
         <commentGenerator>
             <property name="javaFileEncoding" value="UTF-8"/>
             <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
-            <property name="suppressAllComments" value="true" />
-            <property name="suppressDate" value="true" />
+            <property name="suppressAllComments" value="true"/>
+            <property name="suppressDate" value="true"/>
         </commentGenerator>
 
         <!--数据库链接地址账号密码-->
@@ -46,17 +46,18 @@
                 type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象
                 type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口
         -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.liuzhiqiang.mapper.sysRole" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.liuzhiqiang.mapper.sysRole"
+                             targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
         <!--生成对应表及类名-->
-            <table tableName="sys_role"
-                   domainObjectName="SysRole"
-                   enableCountByExample="false"
-                   enableUpdateByExample="false"
-                   enableDeleteByExample="false"
-                   enableSelectByExample="false"
-                   selectByExampleQueryId="false">
-            </table>
+        <table tableName="sys_role"
+               domainObjectName="SysRole"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
     </context>
 </generatorConfiguration>

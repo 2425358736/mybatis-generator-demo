@@ -21,6 +21,7 @@ public enum Annotation {
     private String annotation;
 
     private String clazz;
+
     Annotation(String annotation, String clazz) {
         this.annotation = annotation;
         this.clazz = clazz;

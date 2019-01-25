@@ -18,10 +18,12 @@ import java.io.IOException;
  * @created Create Time: 2019/1/22
  */
 public class FreeMarkerTemplateUtils {
-    private FreeMarkerTemplateUtils(){}
+    private FreeMarkerTemplateUtils() {
+    }
+
     private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_22);
 
-    static{
+    static {
         CONFIGURATION.setTemplateLoader(new ClassTemplateLoader(FreeMarkerTemplateUtils.class, "/template"));
         CONFIGURATION.setDefaultEncoding("UTF-8");
         CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
